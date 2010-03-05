@@ -22,9 +22,11 @@ class SnsExtension < Radiant::Extension
 
 
   def activate
-    admin.tabs.add "CSS", "/admin/css", :after => "Layouts", :visibility => [:admin, :developer]
-    admin.tabs.add "JS", "/admin/js", :after => "CSS", :visibility => [:admin, :developer]
 
+    tab "Design" do
+      add_item "CSS", "/admin/css", :after => "Snippets", :visibility => [:admin, :developer]
+      add_item "JS", "/admin/js", :after => "CSS", :visibility => [:admin, :developer]
+    end
     # Include my mixins (extending PageTags and SiteController)
     Page.send :include, Sns::PageTags
     SiteController.send :include, Sns::SiteControllerExt
@@ -40,13 +42,6 @@ class SnsExtension < Radiant::Extension
     UserActionObserver.instance.send :add_observer!, Stylesheet
     UserActionObserver.instance.send :add_observer!, Javascript
   end
-
-
-  def deactivate
-    admin.tabs.remove "CSS"
-    admin.tabs.remove "JS"
-  end
-
 
   private
 
