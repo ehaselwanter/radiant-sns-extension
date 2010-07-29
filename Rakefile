@@ -24,7 +24,24 @@ require 'rake/testtask'
 rspec_base = File.expand_path(RADIANT_ROOT + '/vendor/plugins/rspec/lib')
 $LOAD_PATH.unshift(rspec_base) if File.exist?(rspec_base)
 require 'spec/rake/spectask'
-# require 'spec/translator'
+
+begin
+  require 'jeweler'
+  Jeweler::Tasks.new do |gem|
+    gem.name = "radiant-sns-extension"
+    gem.summary = %Q{Adds javascript and stylesheet management.}
+    gem.description = %Q{SNS adds support for javascript and stylesheets.}
+    gem.email = "radiant@radiantcms.org"
+    gem.homepage = "http://github.com/radiant/radiant-sns-extension"
+    gem.authors = ["Swank Innovations, LLC"]
+    gem.add_development_dependency "rspec"
+    gem.add_development_dependency "cucumber"
+    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
+  end
+  Jeweler::GemcutterTasks.new
+rescue LoadError
+  puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
+end
 
 # Cleanup the RADIANT_ROOT constant so specs will load the environment
 Object.send(:remove_const, :RADIANT_ROOT)

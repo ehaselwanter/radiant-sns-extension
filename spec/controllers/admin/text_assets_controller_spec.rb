@@ -35,7 +35,7 @@ require File.dirname(__FILE__) + '/../../spec_helper'
     dataset :users, :javascripts if current_asset[:name] == 'javascript'
 
     before :each do
-      login_as :developer
+      login_as :designer
     end
 
 
@@ -65,11 +65,11 @@ require File.dirname(__FILE__) + '/../../spec_helper'
         end
 
 
-        it "should allow access to developers" do
+        it "should allow access to designers" do
           lambda { get action,
                    :id => text_asset_id(:main),
                    :asset_type => current_asset[:name] }.
-              should restrict_access(:allow => [users(:developer)])
+              should restrict_access(:allow => [users(:designer)])
         end
 
 
@@ -81,7 +81,7 @@ require File.dirname(__FILE__) + '/../../spec_helper'
         end
 
 
-        it "should deny non-developers and non-admins" do
+        it "should deny non-designers and non-admins" do
           lambda { get action, :asset_type => current_asset[:name], :id => text_asset_id(:main) }.
               should restrict_access(:deny => [users(:non_admin),
                                                users(:existing)])

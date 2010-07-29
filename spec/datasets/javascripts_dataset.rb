@@ -8,10 +8,13 @@ class JavascriptsDataset < Dataset::Base
   helpers do
 
     def create_javascript(name, attributes={})
-      create_model :javascript,
-                    name.symbolize,
+      javascript = create_model :javascript,
+                    name.downcase.to_sym,
                     javascript_params(
                         attributes.reverse_merge(:name => name) )
+      if javascript.nil?
+        throw "Error creating user dataset for #{name}"
+      end
     end
 
 

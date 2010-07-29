@@ -2,7 +2,7 @@
   :plain
     function toggle_upload_popup() {
       var popup = $('upload-popup');
-      center(popup);
+      Element.centerInViewport(popup);
       Element.toggle(popup);
     }
     function uploadInProgress() {
@@ -12,7 +12,7 @@
     }
     function showErrorsPopup() {
       var popup = $('upload-errors-popup');
-      center(popup);
+      Element.centerInViewport(popup);
       popup.show();
       $('upload-popup').hide();
       $('busy').hide();
@@ -20,41 +20,33 @@
       $('upload_file').disabled = false;
     }
 
-- if model_name == 'Stylesheet'
-  %h1 Stylesheets
-  - render_region :top do |top|
-    - top.help_text do
-      %p Cascading Stylesheets (CSS files) can be used to alter the look &amp; feel of your pages, layouts, and/or snippets.
-- elsif model_name == 'Javascript'
-  %h1 Javascripts
-  - render_region :top do |top|
-    - top.help_text do
-      %p Javascripts add dynamic behaviors that can be used within your pages, layouts, and/or snippets.
-
-%table.index{:id => model_symbol, :cellspacing => 0, :border => 0, :cellpadding => 0}
-  %thead
-    %tr
-      %th{:class => model_symbol}
-        = plural_model_name
-      %th.modify Modify
-  %tbody
-    - unless models.empty?
-      - models.each do |text_asset|
-        %tr.node.level-1
-          -# this next class is dumb but Radiant hard coded for the Snippet class so we'll just piggyback on that...
-          %td.snippet 
-            = image("sns/#{model_symbol}", :alt => "#{model_name}-icon", :title => text_asset.url)
-            %span= link_to(text_asset.name, send("edit_admin_#{model_symbol}_path", :id => text_asset), :title => text_asset.url)
-          %td.remove
-            = link_to image('remove', :alt => "Remove #{model_name}"), send("remove_admin_#{model_symbol}_path", :id => text_asset)
-    - else
+.outset
+  = render_region :top
+  %table.index{:id => 'test', :cellspacing => 0, :border => 0, :cellpadding => 0}
+    %thead
       %tr
-        %td.note{:colspan => 2}== No #{plural_model_name}
+        %th{:class => model_symbol}
+          = plural_model_name
+        %th.modify Modify
+    %tbody
+      - unless models.empty?
+        - models.each do |text_asset|
+          %tr.node.level-1
+            -# this next class is dumb but Radiant hard coded for the Snippet class so we'll just piggyback on that...
+            %td.snippet 
+              = image("sns/#{model_symbol}", :alt => "#{model_name}-icon", :title => text_asset.url)
+              %span= link_to(text_asset.name, send("edit_admin_#{model_symbol}_path", :id => text_asset), :title => text_asset.url)
+            %td.remove
+              = link_to "Remove", send("remove_admin_#{model_symbol}_path", :id => text_asset)
+      - else
+        %tr
+          %td.note{:colspan => 2}== No #{plural_model_name}
 
-%p
-  = link_to(image("sns/new-#{model_symbol}", :alt => "New #{model_name}"), send("new_admin_#{model_symbol}_path"))
-  &nbsp;&nbsp;
-  = link_to image("sns/upload-#{model_symbol}", :alt => "Upload #{model_name}"), "#", :onclick => "toggle_upload_popup(); return false;"
+  #actions
+    = will_paginate(models)
+    %ul
+      %li= link_to(image('plus', :alt => "New #{model_name}") + " New #{model_name}", send("new_admin_#{model_symbol}_path"))
+      %li= link_to image('plus', :alt => "Upload #{model_name}") + ' Upload', "#", :onclick => "toggle_upload_popup(); return false;"
 
 - content_for 'popups' do
   .popup#upload-popup{:style => 'display:none;width:20em'}

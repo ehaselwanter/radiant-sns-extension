@@ -8,10 +8,13 @@ class StylesheetsDataset < Dataset::Base
   helpers do
 
     def create_stylesheet(name, attributes={})
-      create_model :stylesheet,
-                    name.symbolize,
+      stylesheet = create_model :stylesheet,
+                    name.downcase.to_sym,
                     stylesheet_params(
                         attributes.reverse_merge(:name => name) )
+      if stylesheet.nil?
+        throw "Error creating user dataset for #{name}"
+      end
     end
 
 

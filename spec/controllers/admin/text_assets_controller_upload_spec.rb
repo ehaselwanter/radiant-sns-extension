@@ -20,46 +20,47 @@ require File.dirname(__FILE__) + '/../../spec_helper'
   describe "For #{current_asset[:name].pluralize}, the", Admin::TextAssetsController do
 
     integrate_views
-    dataset :users
+    
+    dataset :users, (current_asset[:symbol].to_s + 's').to_sym
 
 
     before :each do
-      login_as :developer
+      login_as :designer
       #@cache = @controller.cache = FakeResponseCache.new
     end
 
 
     describe "upload action" do
-#
-#      it "should require login to access" do
-#        logout
-#        lambda { get :upload, :asset_type => current_asset[:name] }.
-#            should require_login
-#      end
-#
-#
-#      it "should allow access to developers" do
-#        lambda { get :upload,
-#                     :id => text_asset_id('main'),
-#                     :asset_type => current_asset[:name] }.
-#            should restrict_access(:allow => [users(:developer)])
-#      end
-#
-#
-#      it "should allow access to admins" do
-#        lambda { get :upload,
-#                     :id => text_asset_id('main'),
-#                     :asset_type => current_asset[:name]}.
-#            should restrict_access(:allow => [users(:admin)])
-#      end
-#
-#
-#      it "should deny non-developers and non-admins" do
-#        lambda { get :upload,
-#                     :asset_type => current_asset[:name] }.
-#            should restrict_access(:deny => [users(:non_admin),
-#                                             users(:existing)])
-#      end
+
+     it "should require login to access" do
+       logout
+       lambda { get :upload, :asset_type => current_asset[:name] }.
+           should require_login
+     end
+
+
+     it "should allow access to designers" do
+       lambda { get :upload,
+                    :id => text_asset_id('main'),
+                    :asset_type => current_asset[:name] }.
+           should restrict_access(:allow => [users(:designer)])
+     end
+
+
+     it "should allow access to admins" do
+       lambda { get :upload,
+                    :id => text_asset_id('main'),
+                    :asset_type => current_asset[:name]}.
+           should restrict_access(:allow => [users(:admin)])
+     end
+
+
+     it "should deny non-designers and non-admins" do
+       lambda { get :upload,
+                    :asset_type => current_asset[:name] }.
+           should restrict_access(:deny => [users(:non_admin),
+                                            users(:existing)])
+     end
 
 
 
